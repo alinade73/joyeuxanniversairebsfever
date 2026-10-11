@@ -1,0 +1,104 @@
+```html
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ziya 💛</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fff9d9;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    #collage {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: apparition 1.5s ease both;
+    }
+
+    .cap {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 60px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+      text-align: center;
+      color: white;
+      font-style: italic;
+      font-size: clamp(20px, 4.5vw, 30px);
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+      animation: apparition 2s ease both;
+    }
+
+    #missing {
+      display: none;
+      position: fixed;
+      inset: 0;
+      padding: 25px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #3b3020;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    @keyframes apparition {
+      from {
+        opacity: 0;
+        transform: scale(1.04);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <img id="collage" src="photo/ziya1.webp" alt="Ziya">
+
+  <div class="cap" id="caption">
+    Ad günün mübarək, Ziya! 💛
+  </div>
+
+  <div id="missing">
+    Şəkil açılmadı 💛<br>
+    Zəhmət olmasa, şəklin adını və yerini yoxla.
+  </div>
+
+  <script>
+    const photo = document.getElementById("collage");
+    const message = document.getElementById("missing");
+    const caption = document.getElementById("caption");
+
+    photo.addEventListener("error", function () {
+      photo.style.display = "none";
+      caption.style.display = "none";
+      message.style.display = "flex";
+    });
+
+    photo.addEventListener("load", function () {
+      photo.style.display = "block";
+      message.style.display = "none";
+      caption.style.display = "block";
+    });
+  </script>
+</body>
+</html>
+```

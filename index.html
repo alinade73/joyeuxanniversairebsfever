@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ziya üçün bir sürpriz 💌</title>
+<style>
+:root{--bg:#fff9d9;--card:#fffdf2;--ink:#3b3020;--purple:#8e6bbf;--pink:#e88a9b;--soft:#f4e7a1}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;text-align:center;overflow-x:hidden;transition:opacity .7s}
+body.fade{opacity:0}
+section{max-width:560px;margin:0 auto;padding:32px 20px}
+h1,h2{font-weight:normal}
+canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10}
+.hint{opacity:.7;font-style:italic;margin-top:18px}
+
+/* ===== ENVELOPPE ===== */
+#env{position:relative;width:min(300px,80vw);aspect-ratio:3/2;margin:60px auto 0;cursor:pointer;
+  filter:drop-shadow(0 12px 18px rgba(80,40,60,.3));transition:transform .3s,opacity .6s}
+#env:hover{transform:translateY(-5px) rotate(-1deg)}
+#env.gone{opacity:0}
+#env .back{position:absolute;inset:0;background:#d06a82;border-radius:6px}
+#env .paper{position:absolute;left:6%;right:6%;top:6%;bottom:6%;z-index:1;background:var(--card);border-radius:4px;
+  border-top:4px solid var(--purple);padding-top:14px;color:var(--purple);font-style:italic;font-size:15px;
+  transition:transform .9s .5s cubic-bezier(.3,1.4,.5,1)}
+#env .front{position:absolute;inset:0;z-index:2;border-radius:6px;
+  background:linear-gradient(135deg,#f3a0b0,#e88a9b 55%,#dc7b8f);
+  clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%)}
+#env .front::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.16);clip-path:polygon(0 100%,50% 54%,100% 100%)}
+#env .flap{position:absolute;inset:0;z-index:3;background:linear-gradient(#dd7b90,#c9647b);
+  clip-path:polygon(0 0,100% 0,50% 54%);transform-origin:top center;transition:transform .6s,z-index 0s .3s}
+#env.open .flap{transform:rotateX(180deg);z-index:0}
+#env.open .paper{transform:translateY(-62%)}
+
+/* ===== LETTRE ===== */
+#reveal,#bday{display:none}
+.letter{background:var(--card);border-radius:10px;padding:28px 24px;text-align:left;line-height:1.7;
+  box-shadow:0 6px 20px rgba(0,0,0,.15);border-top:5px solid var(--purple);animation:up .9s both;white-space:pre-line}
+@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+#count{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+#count div{background:var(--soft);border-radius:10px;padding:10px 12px;min-width:64px}
+#count b{display:block;font-size:26px;color:var(--purple)}
+#count span{font-size:12px}
+
+/* ===== GÂTEAU ===== */
+.cake{position:relative;width:220px;margin:40px auto 0;cursor:pointer}
+.tier{height:60px;background:#f2c94c;border-radius:10px 10px 6px 6px;position:relative}
+.tier.b{height:70px;width:220px;background:#e6b93d;margin-top:-2px}
+.tier.t{width:150px;margin:0 auto;background:#ffd966}
+.tier::before{content:"";position:absolute;top:0;left:0;right:0;height:16px;background:#fff;border-radius:10px 10px 30px 30px;opacity:.9}
+.msg{position:absolute;bottom:14px;width:100%;font-size:13px;color:#fff;font-weight:bold;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.candles{display:flex;justify-content:center;gap:16px;height:52px;align-items:flex-end}
+.candle{width:8px;height:32px;background:var(--purple);border-radius:3px;position:relative}
+.candle::before{content:"";position:absolute;top:-16px;left:-2px;width:12px;height:16px;
+  background:radial-gradient(#fff 15%,#ffb300 50%,#ff6d00);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flame .25s infinite alternate}
+@keyframes flame{to{transform:scale(1.1,.9) rotate(4deg)}}
+.out .candle::before{display:none}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<section id="intro">
+  <h1>Sənin üçün bir şey var… 💌</h1>
+  <div id="env" role="button" tabindex="0" aria-label="Zərfi aç">
+    <div class="back"></div>
+    <div class="paper">Ziya üçün 💛</div>
+    <div class="front"></div>
+    <div class="flap"></div>
+  </div>
+  <p class="hint" id="hint">Zərfin üzərinə kliklə</p>
+</section>
+
+<section id="reveal">
+  <div class="letter" id="letter"></div>
+  <h2 style="margin-top:36px">Növbəti ad gününə qalan vaxt…</h2>
+  <div id="count"></div>
+</section>
+
+<section id="bday">
+  <h2>Bir arzu tut 🎂</h2>
+  <div class="cake" id="cake">
+    <div class="candles" id="candles"></div>
+    <div class="tier t"></div>
+    <div class="tier b"><div class="msg">Ad günün mübarək, Ziya!</div></div>
+  </div>
+  <p class="hint" id="blowHint">Bir arzu tut və şamları söndür… 💛</p>
+</section>
+
+<script>
+/* ====== TA LETTRE ====== */
+const LETTRE = `Ad günün mübarək, dünyanın bütün xoşbəxtliyinə layiq olan ən yaxşı dostuma.
+
+Sənə yenidən möhtəşəm bir gün keçirməyini arzulayıram, çünki insanın hər gün 18 yaşı olmur… sənin üçün isə bu, cəmi iki dəfə olur.
+
+Həyatımdakı əvəzolunmaz varlığın üçün sənə təşəkkür etmək istəyirdim. Sən xəyallarında, səyahətlərində və məqsədlərində uğur qazanmağa layiqsən. Kaş ki, bütün dünya səndə olan bütün potensialı görə biləydi.
+
+Məni dinlədiyin, birlikdə keçirdiyimiz gülüş dolu anlar və hər an yanımda olduğun üçün təşəkkür edirəm. Həmçinin həyatıma gətirdiyin hər şey üçün də təşəkkür edirəm.
+
+Sənin sayəndə YouTube Premium əldə etdim (bununla hamının yanında öyünürdüm, amma heç kimin vecinə də deyildi 😭), Warden-in mövcud olduğunu öyrəndim və Minecraft-da keçirdiyimiz bütün anlar həyatda heç vaxt unutmayacağım şeylərdir.
+
+Biz birlikdə çoxlu jam-lər etdik və öz playlistimi qoymalı olduğum vaxt istisna olmaqla, bütün jam-lərimizi çox sevirdim.
+
+League of Legends oyununu kəşf etdim. Düşünürəm ki, bu, ən pis oynadığım oyunlardan biridir.
+
+İndi Lana Del Rey-ə qulaq asıram (P.S.: Lana Del Rey jam-lərimiz üçün darıxıram).
+
+Səninlə ən gözəl dostluqlarımdan birini yaşadım və onlayn olmağımız bəzən bizi bir-birimizdən uzaqlaşdıra bilsə də, dostluğumuzun həqiqətən eyni qalmasını istəyirəm.
+
+Kiçik bir maraqlı fakt: bu məktubu sənin üçün hazırladığım playlistə qulaq asaraq yazıram.
+
+Sənə olduğun möhtəşəm insana layiq, inanılmaz bir il arzulayıram. 💛`;
+
+const ANNIVERSAIRE = { mois: 8, jour: 20 }; // 8 = août
+const PAGE_SUIVANTE = "collage.html";
+const MUSIQUE = "musique/musique.mp3"; // dossier "music", fichier "muisque" (change .mp3 si c'est un autre format)
+const music = new Audio(MUSIQUE);
+music.loop = true;
+
+const $ = id => document.getElementById(id);
+$("letter").textContent = LETTRE;
+
+/* ====== CONFETTIS ====== */
+const cv = $("confetti"), cx = cv.getContext("2d");
+let parts = [];
+function resize(){ cv.width = innerWidth; cv.height = innerHeight; }
+addEventListener("resize", resize); resize();
+const COLORS = ["#f2c94c","#8e6bbf","#ffd966","#b79be6","#ff9fb0","#ffffff"];
+function mk(){
+  return { x: Math.random()*cv.width, y: -10 - Math.random()*cv.height*.3,
+    vx: (Math.random()-.5)*2, vy: 2+Math.random()*3, s: 6+Math.random()*8,
+    r: Math.random()*6, vr: (Math.random()-.5)*.3, c: COLORS[Math.floor(Math.random()*COLORS.length)] };
+}
+function confetti(ms = 3000){
+  const end = performance.now() + ms;
+  for(let i=0;i<160;i++) parts.push(mk());
+  (function loop(t){
+    cx.clearRect(0,0,cv.width,cv.height);
+    if(t < end && parts.length < 220) parts.push(mk(), mk());
+    parts.forEach(p => {
+      p.y += p.vy; p.x += p.vx; p.r += p.vr;
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r);
+      cx.fillStyle = p.c; cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); cx.restore();
+    });
+    parts = parts.filter(p => p.y < cv.height + 20);
+    if(parts.length || t < end) requestAnimationFrame(loop);
+  })(performance.now());
+}
+
+/* ====== ENVELOPPE ====== */
+let opened = false;
+function openEnvelope(){
+  if(opened) return; opened = true;
+  $("env").classList.add("open");
+  $("hint").style.display = "none";
+  confetti();
+  music.play().catch(() => {}); // le navigateur n'autorise le son qu'après un clic
+  setTimeout(() => $("env").classList.add("gone"), 1900);
+  setTimeout(() => {
+    $("intro").style.display = "none";
+    $("reveal").style.display = "block";
+    $("bday").style.display = "block";
+    scrollTo(0,0);
+  }, 2500);
+}
+$("env").addEventListener("click", openEnvelope);
+$("env").addEventListener("keydown", e => {
+  if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openEnvelope(); }
+});
+
+/* ====== COMPTE À REBOURS ====== */
+function nextBday(){
+  const now = new Date();
+  let d = new Date(now.getFullYear(), ANNIVERSAIRE.mois-1, ANNIVERSAIRE.jour);
+  if(d <= now) d = new Date(now.getFullYear()+1, ANNIVERSAIRE.mois-1, ANNIVERSAIRE.jour);
+  return d;
+}
+function tick(){
+  const diff = nextBday() - new Date();
+  const v = [Math.floor(diff/864e5), Math.floor(diff/36e5)%24, Math.floor(diff/6e4)%60, Math.floor(diff/1e3)%60];
+  const l = ["gün","saat","dəqiqə","saniyə"];
+  $("count").innerHTML = v.map((x,i) => `<div><b>${x}</b><span>${l[i]}</span></div>`).join("");
+}
+tick(); setInterval(tick, 1000);
+
+/* ====== GÂTEAU ====== */
+for(let i=0;i<5;i++) $("candles").appendChild(Object.assign(document.createElement("div"),{className:"candle"}));
+let blown = false;
+function blowOut(){
+  if(blown) return; blown = true;
+  $("cake").classList.add("out");
+  $("blowHint").textContent = "Ad günün mübarək! 🎉";
+  confetti(2500);
+  // après quelques secondes : fondu puis nouvelle page pleine de photos
+  setTimeout(() => {
+    try { sessionStorage.setItem("musicTime", music.currentTime); } catch(e) {}
+    document.body.classList.add("fade");
+    setTimeout(() => { location.href = PAGE_SUIVANTE; }, 700);
+  }, 3200);
+}
+$("cake").addEventListener("click", blowOut);
+</script>
+</body>
+</html>
