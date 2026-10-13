@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ziya üçün 💌</title>
+<style>
+:root{--bg:#fff7d6;--card:#fffdf0;--ink:#3b2f1a;--soft:#6b5a3a;--purple:#8e6bbf;--line:#f0e0a0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;overflow-x:hidden}
+header{padding:calc(24px + env(safe-area-inset-top,0px)) 20px 22px;border-bottom:1px solid var(--line)}
+.to{color:var(--purple);font-size:16px}
+h1{font-size:24px;margin:16px 0 14px}
+header p{margin:0;color:var(--soft)}
+main{max-width:620px;margin:22px auto 0;padding:0 14px}
+.card{background:var(--card);border-radius:12px;padding:16px 18px;text-align:left;animation:up .8s both}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+ul{list-style:none;margin:0;padding:0}
+li{position:relative;padding:11px 0 11px 30px;font-size:18px;line-height:1.4}
+li::before{content:"♡";position:absolute;left:0;top:9px;color:var(--purple);font-size:20px}
+
+footer{padding:34px 20px calc(50px + env(safe-area-inset-bottom,0px))}
+footer h2{color:var(--purple);font-size:22px;margin:0 0 10px}
+footer p{margin:0;color:var(--soft);font-size:15px}
+</style>
+</head>
+<body>
+<header>
+  <div class="to">💌 Ziya üçün</div>
+  <h1>Sənə təşəkkür edirəm 💛</h1>
+  <p>Həyatıma gətirdiyin hər şey üçün…</p>
+</header>
+
+<main>
+  <div class="card">
+    <ul id="full"></ul>
+  </div>
+</main>
+
+<footer>
+  <h2>Yaxşı ki, varsan. 💛</h2>
+  <p>Həmişə sənin ən yaxşı dostun.</p>
+</footer>
+
+<script>
+const FULL = [
+"Mənim üçün həmişə yanımda olduğun üçün təşəkkür edirəm.",
+"Həmişə mənə qarşı mehriban olduğun üçün təşəkkür edirəm.",
+"Hörmətcil olduğun üçün təşəkkür edirəm.",
+"Hekayələrimi dinlədiyin üçün təşəkkür edirəm.",
+"Məni həmişə dəstəklədiyin üçün təşəkkür edirəm.",
+"Mənə həmişə inandığın üçün təşəkkür edirəm.",
+"Səbirli olduğun üçün təşəkkür edirəm.",
+"Minecraft üçün təşəkkür edirəm.",
+"Wild Rift üçün təşəkkür edirəm.",
+"Among Us üçün təşəkkür edirəm.",
+"Minecraft PvP-də pis oynadığın üçün təşəkkür edirəm. ",
+"Bazama görə təşəkkür edirəm.",
+"Evimizə görə təşəkkür edirəm.",
+"İki mahnı oxuduğun üçün təşəkkür edirəm.",
+"Gülməli olduğun üçün təşəkkür edirəm.",
+"Məni başa düşdüyün üçün təşəkkür edirəm.",
+"Aix-ə gələcəyin üçün təşəkkür edirəm.",
+"Birlikdə jam etməyə razı olduğun üçün təşəkkür edirəm.",
+"YouTube Premium üçün təşəkkür edirəm.",
+"Dünyanın ən yaxşı insanını dünyaya gətirdikləri üçün valideynlərinə təşəkkür edirəm.",
+"Bizim mahnımızı yaratdığı üçün Yağmura təşəkkür edirəm.",
+"Zənglərin üçün təşəkkür edirəm.",
+"Videozənglərin üçün təşəkkür edirəm.",
+"İngiliscə danışa bilməməyimə hörmətlə yanaşdığın üçün təşəkkür edirəm.",
+"Bütün bu xatirələr üçün təşəkkür edirəm.",
+"Gülməli olmayan zarafatların üçün (məsələn, narkotiklə bağlı zarafatın ) təşəkkür edirəm.",
+"TikTok streak-imiz üçün təşəkkür edirəm.",
+"İmzan üçün təşəkkür edirəm (bir neçə ilə varlanacağam).",
+"Instagram bio-larımızı birlikdə uyğunlaşdırdığımız üçün təşəkkür edirəm.",
+"Birlikdə yazdığımız qeydlər üçün təşəkkür edirəm.",
+"Məni dünyanın ən yaxşı insanı ilə tanış etdiyi üçün HelloTalk-a təşəkkür edirəm.",
+"Bağını mənə göstərdiyin üçün təşəkkür edirəm.",
+"Bakını mənə göstərdiyin üçün təşəkkür edirəm.",
+"Musiqi tövsiyələrin üçün təşəkkür edirəm.",
+"İngilis dilində mənə kömək etməyə çalışdığın üçün təşəkkür edirəm.",
+"İki ad günün olduğu üçün təşəkkür edirəm. ",
+"Ən yaxşı dostum olduğun üçün təşəkkür edirəm.",
+"Var olduğun üçün təşəkkür edirəm. 💛"
+];
+const full = document.getElementById("full");
+FULL.forEach(t => { const li = document.createElement("li"); li.textContent = t; full.appendChild(li); });
+</script>
+</body>
+</html>
